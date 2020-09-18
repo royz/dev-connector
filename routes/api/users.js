@@ -5,7 +5,8 @@ const registerValidator = require('../../validators/registerValidator');
 const User = require('../../models/User');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
-
+const jwt = require('jsonwebtoken');
+const config = require('config');
 // @route:   POST api/users
 // @description: register user
 // @access:  public
@@ -33,7 +34,16 @@ router.post('/', registerValidator, async (req, res) => {
     user.password = await bcrypt.hash(password, salt);
     await user.save();
 
-    res.send('user registered')
+    const payload = {
+      user: {id: user.id}
+    }
+    jwt.sign(payload,
+      config.get('jwtSecret'),
+      {expiresIn: 360000},
+      (err, token) => {
+        if (err) throw err;
+        res.json({token});
+      });
 
     // return jsonwebtoken
   } catch (err) {
