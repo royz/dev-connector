@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 
-const Profile = new mongoose.Schema({
+const ProfileSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -108,3 +108,5 @@ const Profile = new mongoose.Schema({
     default: Date.now
   }
 });
+
+module.exports = mongoose.model('profile', ProfileSchema);
